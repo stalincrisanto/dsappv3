@@ -90,9 +90,21 @@
                         <form action="" method="post" name="forma" id="forma">
                             <input type="hidden" name="id_local" value="<?php echo $codigo ?>">
                             <div class="form-group">
+                                <label for="productos">Categoría de sus productos:</label><br>
+                                <select id="productos" name="productos" class="material-control tooltips-general" data-toggle="tooltip" data-placement="top"
+                                            data-original-title="Elige una categoría para sus productos">
+                                    <option value="" disabled="" selected="">Selecciona una categoría</option>
+                                    <option value="ropa">Ropa</option>
+                                    <option value="zapatos">Zapatos</option>
+                                    <option value="abarrotes">Abarrotes</option>
+                                    <option value="comida">Comida</option>
+                                    <option value="cosmeticos">Cosméticos</option>
+                                </select>
+                            </div>
+                            <!--<div class="form-group">
                                 <label for="productos">Ingrese el producto que desea comprar</label>
                                 <input type="text" class="form-control" name="productos" placeholder="Producto a comprar">
-                            </div>
+                            </div>-->
                             <div class="form-group">
                                 <label for="direccion">Ingrese su dirección</label>
                                 <input type="text" class="form-control" name="direccion" placeholder="Dirección del cliente">
@@ -300,23 +312,6 @@
                                 console.log('lng: ' + lngLat.lng + '<br />lat: ' + lngLat.lat);
                             }
 
-                            /**$('#signupForm').submit(function(event){
-                                event.preventDefault();
-                                var lat = $('#lat').val();
-                                var lng = $('#lng').val();
-                                var url = 'locations_model.php?add_location&lat=' + lat + '&lng=' + lng;
-                                $.ajax({
-                                    url: url,
-                                    method: 'GET',
-                                    dataType: 'json',
-                                    success: function(data){
-                                        alert(data);
-                                        location.reload();
-                                    }
-                                });
-                            });**/
-                            
-
                             document.getElementById('geocoder').appendChild(geocoder.onAdd(map));
 
                         </script>
@@ -327,9 +322,21 @@
                         <h4 class="text-center text-info">Ingrese los siguientes datos</h4>
                         
                             <input type="hidden" name="id_local" value="<?php echo $codigo ?>">
-                            <div class="form-group">
+                            <!--<div class="form-group">
                                 <label for="productos">Ingrese el producto que desea comprar</label>
                                 <input type="text" class="form-control" name="productos" placeholder="Producto a comprar">
+                            </div>-->
+                            <div class="form-group">
+                                <label for="productos">Categoría de sus productos:</label>
+                                <select id="productos" name="productos" class="material-control tooltips-general" data-toggle="tooltip" data-placement="top"
+                                            data-original-title="Elige una categoría para sus productos">
+                                    <option value="" disabled="" selected="">Selecciona una categoría</option>
+                                    <option value="ropa">Ropa</option>
+                                    <option value="zapatos">Zapatos</option>
+                                    <option value="abarrotes">Abarrotes</option>
+                                    <option value="comida">Comida</option>
+                                    <option value="cosmeticos">Cosméticos</option>
+                                </select>
                             </div>
                             <div class="form-grup">
                                 <label for="direccion_local">Dirección del cliente:</label>
@@ -365,15 +372,52 @@
                                             require 'config.php';
                                             $producto = $_POST['productos'];
                                             //$direccion = $_POST['direccion'];
-
-                                            $result = $conexion->query("SELECT *, ( 3959 * acos( cos( radians('$lat') ) * cos( radians( lat ) ) * cos( radians( lng ) - radians('$lng') ) + sin( radians('$lat') ) * sin( radians( lat ) ) ) ) AS distance 
+                                            //6371
+                                            $result = $conexion->query("SELECT *, ( 6371 * acos( cos( radians('$lat') ) * cos( radians( lat ) ) * cos( radians( lng ) - radians('$lng') ) + sin( radians('$lat') ) * sin( radians( lat ) ) ) ) AS distance 
                                                                         FROM tienda WHERE categoria = '$producto'
-                                                                        HAVING distance < 25 ORDER BY distance LIMIT 0 , 20");
+                                                                        HAVING distance < 100 ORDER BY distance LIMIT 0 , 20");
+                                            function get_saved_locations()
+                                            {
+                                                require ('./config.php');
+                                                $result2 = $conexion->query("SELECT lng,lat FROM tienda");
+                                                $rows2 = array();
+                                                while($r = $result2->fetch_assoc())
+                                                {
+                                                    $rows2 = $r;
+                                                }
+                                                $indexed = array_map('array_values', $rows2);
+                                                echo json_encode($indexed);
+                                                if (!$rows2) {
+                                                    return null;
+                                                }
+                                            }
+                                    ?>
+                                            <script>
+                                                var saved_markers = <?= get_saved_locations() ?>;
+                                                map.on('load', function() {
+                                                    add_markers(saved_markers);
+                                                });
+                                                function add_markers(coordinates) {
+                                                    var geojson = (saved_markers == coordinates ? saved_markers : '');
+                                                    console.log(geojson);
+                                                    // add markers to map
+                                                    geojson.forEach(function (marker) {
+                                                        console.log(marker);
+                                                        // make a marker for each feature and add to the map
+                                                        new mapboxgl.Marker()
+                                                        .setLngLat(marker)
+                                                        .addTo(map);
+                                                });
+
+                                                }
+                                            </script>
+                                    <?php
                                             //$result = $conexion->query("SELECT * FROM tienda WHERE  categoria='$producto' AND direccion_local='$direccion'");
                                             if ($result->num_rows > 0) 
                                             {
                                                 while($row = $result->fetch_assoc()) 
                                                 {
+                                                    
                                                     $_SESSION['nombreLocal'] = $row['nombre_local'];
                                                     $_SESSION['idLocal'] = $row['id_local']; 
                                     ?>
@@ -403,6 +447,7 @@
                     </div>
                 </div>
             </div>
+            
             <!--FIN DE MAPA-->
         </div>
     </div>

@@ -39,12 +39,15 @@
     {
         require 'config.php';
         $stmt = $conexion->prepare("UPDATE productos set nombre_producto=?,precio_producto=?,descripcion_producto=?,existencia=?,imagen=? WHERE id_producto=?");
-        $stmt->bind_param("sdsisi", $nombre, $precio, $descripcion, $existencia, $imagen,$codigo);
+        $stmt->bind_param("sdsisi", $nombre, $precio, $descripcion, $existencia, $ruta,$codigo);
         $nombre = $_POST["nombreProducto"];
         $precio = $_POST["precioProducto"];
         $descripcion = $_POST["descripcionProducto"];
         $existencia = $_POST["existenciaProducto"];
-        $imagen = $_POST["imagenProducto"];
+        $imagen = $_FILES['imagenProducto']['name'];
+        $archivo = $_FILES['imagenProducto']['tmp_name'];
+        $ruta = "images/".$imagen;
+        move_uploaded_file($archivo,$ruta);
         $codigo = $_POST["codigoProducto"];
         $stmt->execute();
         $stmt->close();

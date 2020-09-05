@@ -202,9 +202,21 @@
                             <label for="contraseña">Contraseña:</label>
                             <input type="password" name="contraseña" placeholder="Ingrese una contraseña" required/>
                         </div>
-                        <div class="form-group">
+                        <!--<div class="form-group">
                             <label for="categoria1">Categoría de sus productos:</label>
                             <input type="text" name="categoria" placeholder="Ingrese la categoría de su producto (zapatos, ropa, viveres)" required/>
+                        </div>-->
+                        <div class="form-group">
+                            <label for="categoria1">Categoría de sus productos:</label>
+                            <select id="categoria1" name="categoria" class="material-control tooltips-general" data-toggle="tooltip" data-placement="top"
+                                        data-original-title="Elige una categoría para sus productos">
+                                <option value="" disabled="" selected="">Selecciona una categoría</option>
+                                <option value="ropa">Ropa</option>
+                                <option value="zapatos">Zapatos</option>
+                                <option value="abarrotes">Abarrotes</option>
+                                <option value="comida">Comida</option>
+                                <option value="cosmeticos">Cosméticos</option>
+                            </select>
                         </div>
 
                         <div class="form-submit">

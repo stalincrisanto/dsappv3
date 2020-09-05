@@ -98,6 +98,18 @@
     $stmt2->execute();
     $stmt2->close();
     $codigoPedido="";
+
+    $stmt3 = $conexion->query("SELECT id_producto,cantidad FROM carro_compra WHERE disminuir is NULL");
+    if($stmt3->num_rows>0)
+    {
+      while ($row = $stmt3->fetch_assoc())
+      {
+        $conexion->query("UPDATE productos SET existencia=existencia-'".$row['cantidad']."' WHERE id_producto='".$row['id_producto']."'");
+        $conexion->query("UPDATE carro_compra SET disminuir='si' WHERE id_producto='".$row['id_producto']."' AND disminuir is NULL");
+        //UPDATE productos SET existencia=existencia-1 WHERE id_producto = 3
+      }
+    }
+
   }
 ?>
 

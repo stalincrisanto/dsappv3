@@ -73,7 +73,7 @@
                 //$tipoProducto = $_POST['tipoProducto'];
                 //$direccion = $_POST['direccion'];
                 include './config.php';
-                $stmt = $conexion->prepare("SELECT * FROM productos WHERE id_local = '$id_local'");
+                $stmt = $conexion->prepare("SELECT * FROM productos WHERE id_local = '$id_local' AND existencia > 1");
                 $stmt->execute();
                 $result = $stmt->get_result();
                 while($row = $result->fetch_assoc())

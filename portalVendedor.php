@@ -85,15 +85,38 @@
 		{
       echo ("TIENES ".$rows." VENTAS NUEVAS");
     
-?>
-  <script>
-  Swal.fire(
-  'Atención',
-  'Tienes Nuevos Pedidos',
-  'success'
-    )
-  </script>
-<?php } 
+    ?>
+      <script>
+      Swal.fire(
+      'Atención',
+      'Tienes Nuevos Pedidos',
+      'success'
+        )
+      </script>
+    <?php }
+    /**VERIFICAR PRODUCTOS CUANDO SE AGOTAN**/
+    $query = $conexion->query("SELECT existencia FROM productos WHERE id_local='".$_SESSION['id_local']."'");
+    if($query->num_rows>0)
+    {
+      while ($row = $query->fetch_assoc())
+      {
+        if($row['existencia']<2)
+        {
+      ?>
+          <script>
+            Swal.fire(
+            'Atención',
+            'Tienes Productos por agotar',
+            'warning'
+            )
+          </script>
+      <?php
+        }
+      }
+    }
+    ?>
+    <?php
+    //////////////////////////
 
     $queryNumVentas = $conexion->query("SELECT COUNT(id_pedido) AS num_pedidos FROM pedidos
     WHERE fecha_pedido BETWEEN DATE(DATE_SUB(NOW(),INTERVAL 7 DAY)) AND NOW() AND id_local='".$_SESSION['id_local']."'");

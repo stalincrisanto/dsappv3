@@ -26,6 +26,7 @@
             $query = $conexion->prepare("INSERT INTO carro_compra (id_producto,id_local,nombre_producto,precio_producto,imagen_producto,cantidad,precio_total,estado,estado_vendedor)
             VALUES(?,?,?,?,?,?,?,?,?)");
             $query->bind_param("iisdsidss",$idProducto,$idLocal,$nombreProducto,$precioProducto,$imagenProducto,$cantidad,$precioProducto,$estado,$estado_vendedor);
+            
             $query->execute();
             echo('<div class="alert alert-success alert-dismissible mt-2">
                     <button type="button" class="close" data-dismiss="alert">&times;</button>
@@ -149,7 +150,8 @@
             $stmt2->bind_param("i", $idLocal);
             $stmt2->execute();
             $stmt2->close();
-          //header("location: portalVendedor.php");
+
+            $query2 = $conexion->query("UPDATE productos SET existencia = '4' WHERE productos.id_producto = $idLocal;");
         }
         else
         {

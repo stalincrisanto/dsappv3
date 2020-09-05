@@ -146,25 +146,6 @@
 
 <script type="text/javascript">
     $(document).ready(function(){
-        /**$(".addItemBtn").click(function(e){
-            e.preventDefault();
-            var $form = $(this).closest(".form-submit");
-            var idProducto = $form.find(".idProducto").val();
-            var nombreProducto = $form.find(".nombreProducto").val();
-            var precioProducto = $form.find(".precioProducto").val();
-            var imagenProducto = $form.find(".imagenProducto").val();
-            $.ajax({
-                url:"accion.php",
-                method:"post",
-                data:{idProducto:idProducto,nombreProducto:nombreProducto,precioProducto:precioProducto,imagenProducto:imagenProducto},
-                success:function(response)
-                {
-                    $("#message").html(response);
-                    window.scrollTo(0,0);
-                    cargarCarrito();
-                }
-            });
-        });**/
         $(".operacionCantidad").on('change',function(){
             var $el = $(this).closest('tr');
             var idProducto = $el.find(".idProducto").val();
